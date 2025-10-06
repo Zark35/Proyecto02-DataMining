@@ -1,0 +1,144 @@
+version: 2
+
+models:
+  # ======================================================
+  # 🎯 FACT TABLE
+  # ======================================================
+  - name: fct_trips
+    description: >
+      Tabla de hechos principal de viajes de taxi en NYC. 
+      Cada fila representa un viaje único con métricas financieras,
+      de distancia, tiempo y relaciones a las dimensiones.
+    columns:
+      - name: trip_id
+        description: "Identificador único del viaje."
+        tests:
+          - not_null
+          - unique
+
+      - name: pickup_date_sk
+        description: "Clave surrogate de la fecha de inicio del viaje."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_sk
+
+      - name: dropoff_date_sk
+        description: "Clave surrogate de la fecha de fin del viaje."
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: date_sk
+
+      - name: pickup_zone_sk
+        description: "Zona de recogida (relación con dim_zone)."
+        tests:
+          - relationships:
+              to: ref('dim_zone')
+              field: zone_sk
+
+      - name: dropoff_zone_sk
+        description: "Zona de destino (relación con dim_zone)."
+        tests:
+          - relationships:
+              to: ref('dim_zone')
+              field: zone_sk
+
+      - name: payment_type_sk
+        description: "Clave surrogate del tipo de pago."
+        tests:
+          - relationships:
+              to: ref('dim_payment_type')
+              field: payment_type_sk
+
+      - name: ratecode_sk
+        description: "Clave surrogate del tipo de tarifa (rate code)."
+        tests:
+          - relationships:
+              to: ref('dim_ratecode')
+              field: ratecode_sk
+
+      - name: passenger_count
+        description: "Cantidad de pasajeros en el viaje."
+        tests:
+          - not_null
+
+      - name: trip_distance
+        description: "Distancia recorrida (en millas)."
+
+      - name: fare_amount
+        description: "Monto base de la tarifa."
+
+      - name: tip_amount
+        description: "Monto de propina."
+
+      - name: total_amount
+        description: "Monto total pagado por el viaje."
+
+      - name: trip_duration_min
+        description: "Duración del viaje en minutos."
+
+      - name: service_type
+        description: "Tipo de servicio (yellow / green)."
+
+
+  # ======================================================
+  # 📅 DIMENSIONES
+  # ======================================================
+
+  - name: dim_date
+    description: "Dimensión de tiempo. Una fila por fecha distinta."
+    columns:
+      - name: date_sk
+        description: "Clave surrogate de la fecha."
+        tests:
+          - not_null
+          - unique
+      - name: date_value
+        description: "Fecha en formato YYYY-MM-DD."
+
+  - name: dim_zone
+    description: "Dimensión de zonas de taxi (pickup/dropoff)."
+    columns:
+      - name: zone_sk
+        description: "Clave surrogate de la zona (igual a location_id)."
+        tests:
+          - not_null
+          - unique
+      - name: zone_name
+        description: "Nombre de la zona."
+      - name: borough
+        description: "Borough al que pertenece la zona."
+      - name: service_zone
+        description: "Tipo de zona (EWR, Yellow, Green, etc)."
+
+  - name: dim_payment_type
+    description: "Dimensión de métodos de pago."
+    columns:
+      - name: payment_type_sk
+        description: "Clave surrogate del tipo de pago."
+        tests:
+          - not_null
+          - unique
+      - name: payment_type_desc
+        description: "Descripción del método de pago."
+
+  - name: dim_ratecode
+    description: "Dimensión de códigos de tarifa."
+    columns:
+      - name: ratecode_sk
+        description: "Clave surrogate del ratecode."
+        tests:
+          - not_null
+          - unique
+      - name: ratecode_desc
+        description: "Descripción del ratecode."
+
+  - name: dim_vendor
+    description: "Dimensión opcional de proveedor (VendorID)."
+    columns:
+      - name: vendor_sk
+        description: "Identificador del proveedor del servicio."
+        tests:
+          - unique

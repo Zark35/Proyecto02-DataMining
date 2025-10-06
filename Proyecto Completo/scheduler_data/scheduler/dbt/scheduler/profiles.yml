@@ -1,0 +1,14 @@
+scheduler:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "FXXAPHJ-SD16734"
+      user: "SVC_DM_INGEST"
+      password: "ContraseñaSegura123"
+      role: "ROLE_DM_INGEST"
+      database: "NYC_TAXI_DM"
+      warehouse: "WH_DM"
+      schema: "SILVER"
+      threads: 4
+      client_session_keep_alive: False

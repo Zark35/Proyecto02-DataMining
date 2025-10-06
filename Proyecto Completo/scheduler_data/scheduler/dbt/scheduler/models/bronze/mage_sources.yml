@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: nyc_taxi_raw
+    schema: bronze
+    tables:
+      - name: yellow_trips_bronze
+      - name: green_trips_bronze
+      - name: taxi_zones_bronze

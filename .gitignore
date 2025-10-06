@@ -1,0 +1,13 @@
+# dbt
+target/
+dbt_modules/
+
+# Archivos grandes de datos
+*.parquet
+*.csv
+
+# Archivos temporales
+*.log
+*.tmp
+__pycache__/
+.ipynb_checkpoints/
